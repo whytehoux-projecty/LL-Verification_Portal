@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
-from ..schemas import SessionCreate, SessionOut
-from ..database import db
-from ..middleware.rate_limit import limiter
+from schemas import SessionCreate, SessionOut
+from database import db
+from middleware.rate_limit import limiter
 
 router = APIRouter()
 

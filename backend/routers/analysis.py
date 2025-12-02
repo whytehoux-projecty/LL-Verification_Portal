@@ -6,8 +6,8 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel, Field
 from livekit.plugins.google import LLM as GoogleLLM
 
-from ..middleware.rate_limit import limiter
-from ..auth import get_current_user # Protect this endpoint
+from middleware.rate_limit import limiter
+from auth import get_current_user # Protect this endpoint
 
 router = APIRouter(tags=["Analysis"], dependencies=[Depends(get_current_user)])
 
