@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import documents, rooms, client_auth, reports, analysis
-from .routers.sessions import router as sessions_router
-from .routers.auth import router as auth_router
-from .database import init_db
-from .metrics import MetricsMiddleware, metrics_endpoint
-from .middleware.rate_limit import limiter, rate_limit_exceeded_handler
+from routers import documents, rooms, client_auth, reports, analysis
+from routers.sessions import router as sessions_router
+from routers.auth import router as auth_router
+from database import init_db
+from metrics import MetricsMiddleware, metrics_endpoint
+from middleware.rate_limit import limiter, rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 import os
 
