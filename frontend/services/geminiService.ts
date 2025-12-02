@@ -1,20 +1,20 @@
+import { api } from './api';
 import { ScriptAnalysis } from '../types';
 
-// Note: Client-side analysis is mocked for security. 
-// Real implementation should be moved to a backend endpoint.
-
+/**
+ * Calls the backend to analyze a script's content using the Gemini LLM.
+ * @param scriptText The text content of the script.
+ * @returns A promise that resolves to the ScriptAnalysis object.
+ */
 export const analyzeScript = async (scriptText: string): Promise<ScriptAnalysis> => {
-  console.log("Analyzing script (mock):", scriptText.substring(0, 50) + "...");
-
-  // Simulate API delay
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({
-        tone: "Formal and Legal",
-        questionCount: 4,
-        complexity: "Low",
-        summary: "Standard civil ceremony verification script."
-      });
-    }, 1500);
-  });
+  try {
+    const response = await api.post<ScriptAnalysis>('/analyze-script', {
+      script_content: scriptText,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Script analysis failed:', error);
+    // Re-throw the error so the component can catch it and display a message
+    throw error;
+  }
 };

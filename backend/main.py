@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import documents, rooms, client_auth
+from .routers import documents, rooms, client_auth, reports, analysis
 from .routers.sessions import router as sessions_router
 from .routers.auth import router as auth_router
 from .database import init_db
@@ -56,4 +56,6 @@ app.include_router(client_auth.router, tags=["Client"])
 app.include_router(sessions_router, prefix="/api", tags=["Sessions"])
 app.include_router(documents.router, prefix="/api", tags=["Documents"])
 app.include_router(rooms.router, prefix="/api", tags=["Rooms"])
+app.include_router(reports.router, prefix="/api", tags=["Reports"])
+app.include_router(analysis.router, prefix="/api", tags=["Analysis"])
 

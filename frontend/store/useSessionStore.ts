@@ -1,6 +1,27 @@
 import { create } from 'zustand';
 import { api } from '../services/api';
 
+export interface TranscriptEntry {
+    id: string;
+    speaker: string;
+    text: string;
+    timestamp: string;
+}
+
+export interface SessionReport {
+    id: string;
+    groomName: string;
+    brideName: string;
+    date: string;
+    status: 'pending' | 'ready' | 'active' | 'completed';
+    scriptContent?: string;
+    aiConfig?: {
+        voiceStyle: string;
+        strictness: string;
+    };
+    transcripts: TranscriptEntry[];
+}
+
 export interface Session {
     id: string;
     groomName: string;
@@ -25,6 +46,7 @@ interface SessionState {
     createSession: (data: Partial<Session>) => Promise<Session>;
     uploadScript: (sessionId: string, file: File) => Promise<void>;
     startSession: (sessionId: string) => Promise<{ groom_token: string; bride_token: string; lawyer_token: string }>;
+    fetchReport: (sessionId: string) => Promise<SessionReport>; // New
     setCurrentSession: (session: Session | null) => void;
 }
 
@@ -84,6 +106,19 @@ export const useSessionStore = create<SessionState>((set, get) => ({
             return response.data;
         } catch (error) {
             set({ error: 'Failed to start session', isLoading: false });
+            throw error;
+        }
+    },
+
+    fetchReport: async (sessionId) => {
+        set({ isLoading: true, error: null });
+        try {
+            const response = await api.get(`/sessions/${sessionId}/report`);
+            set({ isLoading: false });
+            return response.data;
+        } catch (error) {
+            set({ error: 'Failed to fetch session report', isLoading: false });
+            console.error(error);
             throw error;
         }
     },

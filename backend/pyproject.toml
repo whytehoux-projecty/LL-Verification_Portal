@@ -32,7 +32,7 @@ line-length = 120
 target-version = ['py311']
 include = '\.pyi?$'
 extend-exclude = '''
-/(
+/( 
   # directories
   \.eggs
   | \.git
@@ -44,3 +44,39 @@ extend-exclude = '''
   | dist
 )/
 '''
+
+[tool.mypy]
+python_version = "3.11"
+warn_unused_configs = true
+warn_unreachable = true
+pretty = true
+show_error_codes = true
+show_column_numbers = true
+
+# Quieter defaults; enable strict per-run with `mypy --strict`
+ignore_missing_imports = true
+follow_imports = "silent"
+warn_return_any = false
+warn_unused_ignores = false
+check_untyped_defs = false
+
+# Only type-check project code, not tests/migrations/venv
+files = ["backend"]
+exclude = [
+    "backend/tests/.*",
+    "backend/alembic/.*",
+    "backend/.venv/.*",
+]
+
+[[tool.mypy.overrides]]
+module = [
+  "livekit.*",
+  "sqlalchemy.*",
+  "pydantic.*",
+  "httpx.*",
+  "fastapi.*",
+  "starlette.*",
+  "deepgram.*",
+  "elevenlabs.*",
+]
+ignore_missing_imports = true

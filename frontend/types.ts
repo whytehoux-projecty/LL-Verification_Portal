@@ -13,10 +13,11 @@ export enum SessionStatus {
 }
 
 export interface ScriptAnalysis {
-  tone: string;
-  questionCount: number;
-  complexity: 'Low' | 'Medium' | 'High';
   summary: string;
+  tone: string;
+  complexity: string;
+  estimated_duration_minutes: number;
+  key_questions: string[];
 }
 
 export interface AIConfig {
