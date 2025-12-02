@@ -9,8 +9,8 @@ try:
 except Exception:
     GoogleLLM = None
 
-from backend.middleware.rate_limit import limiter
-from backend.auth import get_current_user
+from ..middleware.rate_limit import limiter
+from ..auth import get_current_user
 
 router = APIRouter(tags=["Analysis"], dependencies=[Depends(get_current_user)])
 

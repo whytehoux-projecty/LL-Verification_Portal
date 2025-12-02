@@ -5,10 +5,10 @@ from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from backend.database import get_db
-from backend.models import Session as SessionModel, Transcript as TranscriptModel
-from backend.schemas import AIConfig as AISchemaConfig
-from backend.models import SessionStatus
+from ..database import get_db
+from ..models import Session as SessionModel, Transcript as TranscriptModel
+from ..schemas import AIConfig as AISchemaConfig
+from ..models import SessionStatus
 
 
 router = APIRouter(tags=["Reports"])

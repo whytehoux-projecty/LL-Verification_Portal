@@ -4,7 +4,7 @@ Authentication endpoints for user login and registration
 from fastapi import APIRouter, HTTPException, status, Depends, Request
 from pydantic import BaseModel, EmailStr
 from datetime import timedelta
-from backend.auth import (
+from ..auth import (
     create_access_token,
     get_password_hash,
     verify_password,
@@ -12,9 +12,9 @@ from backend.auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     get_current_user
 )
-from backend import database as db
-from backend.models import User
-from backend.middleware.rate_limit import limiter
+from .. import database as db
+from ..models import User
+from ..middleware.rate_limit import limiter
 from sqlalchemy import select
 import uuid
 

@@ -5,11 +5,11 @@ from fastapi import APIRouter, HTTPException, status, Depends, Request
 from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
-from backend.database import get_db
-from backend.models import Session
-from backend.routers.rooms import generate_livekit_token
-from backend.utils.session_codes import is_code_expired, validate_session_code_format
-from backend.middleware.rate_limit import limiter
+from ..database import get_db
+from ..models import Session
+from .rooms import generate_livekit_token
+from ..utils.session_codes import is_code_expired, validate_session_code_format
+from ..middleware.rate_limit import limiter
 
 router = APIRouter(tags=["Client Authentication"])
 

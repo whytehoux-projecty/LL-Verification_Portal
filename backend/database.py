@@ -1,9 +1,9 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 from sqlalchemy.orm import sessionmaker
-from backend.config import settings
-from backend.models import Base, Session as SessionModel, SessionStatus
-from backend.schemas import SessionCreate, SessionOut, AIConfig
-from backend.utils.session_codes import generate_session_code, get_code_expiry
+from .config import settings
+from .models import Base, Session as SessionModel, SessionStatus
+from .schemas import SessionCreate, SessionOut, AIConfig
+from .utils.session_codes import generate_session_code, get_code_expiry
 from typing import List
 from urllib.parse import urlsplit, parse_qsl, urlencode, urlunsplit
 import uuid

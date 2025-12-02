@@ -3,9 +3,9 @@ try:
     from livekit import api
 except Exception:
     api = None
-from backend.database import db
-from backend.config import settings
-from backend.models import SessionStatus
+from ..database import db
+from ..config import settings
+from ..models import SessionStatus
 from datetime import timedelta
 from typing import Optional, Dict, Any
 
