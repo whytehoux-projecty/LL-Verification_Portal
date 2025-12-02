@@ -1,5 +1,5 @@
 from fastapi import UploadFile, APIRouter
-from database import db
+from backend.database import db
 import json
 
 try:

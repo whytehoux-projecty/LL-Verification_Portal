@@ -6,14 +6,16 @@ from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from fastapi import Request, Response
 from starlette.status import HTTP_429_TOO_MANY_REQUESTS
+import os
 from ..config import settings
 
 # Initialize rate limiter with Redis backend
+_storage_uri = os.getenv("REDIS_URL") or "memory://"
 limiter = Limiter(
     key_func=get_remote_address,
-    storage_uri=settings.redis_url if hasattr(settings, 'redis_url') else "memory://",
+    storage_uri=_storage_uri,
     default_limits=["100/minute"],
-    headers_enabled=True
+    headers_enabled=False
 )
 
 async def rate_limit_exceeded_handler(request: Request, exc: RateLimitExceeded) -> Response:

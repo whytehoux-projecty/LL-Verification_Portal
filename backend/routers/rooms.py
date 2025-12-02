@@ -1,8 +1,11 @@
 from fastapi import APIRouter, HTTPException
-from livekit import api
-from database import db
-from config import settings
-from models import SessionStatus
+try:
+    from livekit import api
+except Exception:
+    api = None
+from backend.database import db
+from backend.config import settings
+from backend.models import SessionStatus
 from datetime import timedelta
 from typing import Optional, Dict, Any
 
@@ -27,7 +30,7 @@ def generate_livekit_token(
     Returns:
         JWT token string
     """
-    if not settings.livekit_api_key or not settings.livekit_api_secret:
+    if api is None or not settings.livekit_api_key or not settings.livekit_api_secret:
         return f"mock-token-{room_name}-{participant_name}"
         
     token = api.AccessToken(
@@ -81,7 +84,7 @@ async def start_session(session_id: str):
     room_name = session_id
     
     # Check if LiveKit is configured
-    if not settings.livekit_api_key or not settings.livekit_api_secret:
+    if api is None or not settings.livekit_api_key or not settings.livekit_api_secret:
         # Fallback to mock token for development
         return {
             "token": f"mock-token-{session_id}",

@@ -1,11 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import documents, rooms, client_auth, reports, analysis
-from routers.sessions import router as sessions_router
-from routers.auth import router as auth_router
-from database import init_db
-from metrics import MetricsMiddleware, metrics_endpoint
-from middleware.rate_limit import limiter, rate_limit_exceeded_handler
+from backend.routers import documents, rooms, client_auth, reports, analysis
+from backend.routers.sessions import router as sessions_router
+from backend.routers.auth import router as auth_router
+from backend.database import init_db
+from backend.metrics import MetricsMiddleware, metrics_endpoint
+from backend.middleware.rate_limit import limiter, rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 import os
 
@@ -33,9 +33,9 @@ if os.getenv("ENABLE_METRICS", "true").lower() == "true":
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize database on startup"""
-    await init_db()
-    print("✅ Database initialized")
+    if os.getenv("INIT_DB_ON_STARTUP", "true").lower() == "true":
+        await init_db()
+        print("✅ Database initialized")
 
 
 @app.get("/health")
@@ -58,4 +58,3 @@ app.include_router(documents.router, prefix="/api", tags=["Documents"])
 app.include_router(rooms.router, prefix="/api", tags=["Rooms"])
 app.include_router(reports.router, prefix="/api", tags=["Reports"])
 app.include_router(analysis.router, prefix="/api", tags=["Analysis"])
-

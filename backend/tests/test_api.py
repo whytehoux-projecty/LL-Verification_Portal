@@ -2,6 +2,8 @@
 Unit tests for the LexNova Legal backend
 Run with: pytest backend/tests/
 """
+import os
+os.environ.setdefault("INIT_DB_ON_STARTUP", "false")
 import pytest
 from httpx import AsyncClient
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
@@ -13,7 +15,7 @@ import asyncio
 
 
 # Test database URL
-TEST_DATABASE_URL = "postgresql+asyncpg://postgres:postgres@localhost:5432/lexnova_test"
+TEST_DATABASE_URL = "sqlite+aiosqlite:///:memory:"
 
 
 @pytest.fixture(scope="session")
@@ -24,8 +26,14 @@ def event_loop():
     loop.close()
 
 
+@pytest.fixture(scope="session")
+def loop(event_loop):
+    """Alias for aiohttp plugin compatibility"""
+    return event_loop
+
+
 @pytest.fixture(scope="function")
-async def test_db():
+async def test_db(loop):
     """Create a test database"""
     engine = create_async_engine(TEST_DATABASE_URL, echo=False)
     
@@ -37,6 +45,10 @@ async def test_db():
         engine, class_=AsyncSession, expire_on_commit=False
     )
     
+    # Override app's session factory to use test DB
+    import backend.database as dbmod
+    dbmod.AsyncSessionLocal = async_session
+
     async with async_session() as session:
         yield session
     

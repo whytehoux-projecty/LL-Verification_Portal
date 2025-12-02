@@ -1,12 +1,14 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List, Optional
+from datetime import datetime
 from pydantic import BaseModel
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from database import get_db
-from models import Session as SessionModel, Transcript as TranscriptModel
-from schemas import AIConfig as AISchemaConfig, SessionStatus
+from backend.database import get_db
+from backend.models import Session as SessionModel, Transcript as TranscriptModel
+from backend.schemas import AIConfig as AISchemaConfig
+from backend.models import SessionStatus
 
 
 router = APIRouter(tags=["Reports"])

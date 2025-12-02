@@ -4,7 +4,7 @@ Authentication endpoints for user login and registration
 from fastapi import APIRouter, HTTPException, status, Depends, Request
 from pydantic import BaseModel, EmailStr
 from datetime import timedelta
-from auth import (
+from backend.auth import (
     create_access_token,
     get_password_hash,
     verify_password,
@@ -12,9 +12,9 @@ from auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     get_current_user
 )
-from database import AsyncSessionLocal
-from models import User
-from middleware.rate_limit import limiter
+from backend import database as db
+from backend.models import User
+from backend.middleware.rate_limit import limiter
 from sqlalchemy import select
 import uuid
 
@@ -42,9 +42,9 @@ class UserResponse(BaseModel):
 @limiter.limit("5/minute")
 async def register(request: Request, user_data: UserRegister):
     """Register a new lawyer account"""
-    async with AsyncSessionLocal() as db:
+    async with db.AsyncSessionLocal() as db_session:
         # Check if user already exists
-        result = await db.execute(
+        result = await db_session.execute(
             select(User).where(User.email == user_data.email)
         )
         existing_user = result.scalar_one_or_none()
@@ -63,9 +63,9 @@ async def register(request: Request, user_data: UserRegister):
             password_hash=get_password_hash(user_data.password)
         )
         
-        db.add(new_user)
-        await db.commit()
-        await db.refresh(new_user)
+        db_session.add(new_user)
+        await db_session.commit()
+        await db_session.refresh(new_user)
         
         return UserResponse(
             id=new_user.id,
@@ -78,9 +78,9 @@ async def register(request: Request, user_data: UserRegister):
 @limiter.limit("5/minute")
 async def login(request: Request, credentials: UserLogin):
     """Login and receive JWT token"""
-    async with AsyncSessionLocal() as db:
+    async with db.AsyncSessionLocal() as db_session:
         # Find user
-        result = await db.execute(
+        result = await db_session.execute(
             select(User).where(User.email == credentials.email)
         )
         user = result.scalar_one_or_none()
@@ -104,8 +104,8 @@ async def login(request: Request, credentials: UserLogin):
 @router.get("/me", response_model=UserResponse)
 async def get_current_user_info(current_user = Depends(get_current_user)):
     """Get current authenticated user information"""
-    async with AsyncSessionLocal() as db:
-        result = await db.execute(
+    async with db.AsyncSessionLocal() as db_session:
+        result = await db_session.execute(
             select(User).where(User.id == current_user.user_id)
         )
         user = result.scalar_one_or_none()

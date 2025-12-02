@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Request
-from schemas import SessionCreate, SessionOut
-from database import db
-from middleware.rate_limit import limiter
+from backend.schemas import SessionCreate, SessionOut
+from backend.database import db
+from backend.middleware.rate_limit import limiter
 
 router = APIRouter()
 
@@ -14,4 +14,3 @@ async def create_session(request: Request, payload: SessionCreate):
 @limiter.limit("30/minute")
 async def list_sessions(request: Request):
     return await db.list_sessions()
-

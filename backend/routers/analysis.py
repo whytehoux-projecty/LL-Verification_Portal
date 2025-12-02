@@ -4,10 +4,13 @@ import os
 import json
 from fastapi import APIRouter, HTTPException, status, Depends
 from pydantic import BaseModel, Field
-from livekit.plugins.google import LLM as GoogleLLM
+try:
+    from livekit.plugins.google import LLM as GoogleLLM
+except Exception:
+    GoogleLLM = None
 
-from middleware.rate_limit import limiter
-from auth import get_current_user # Protect this endpoint
+from backend.middleware.rate_limit import limiter
+from backend.auth import get_current_user
 
 router = APIRouter(tags=["Analysis"], dependencies=[Depends(get_current_user)])
 
@@ -28,6 +31,8 @@ def get_gemini_client():
     gemini_api_key = os.getenv("GEMINI_API_KEY")
     if not gemini_api_key:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="GEMINI_API_KEY is not configured on the server.")
+    if GoogleLLM is None:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Gemini client unavailable")
     return GoogleLLM(model="gemini-1.5-flash-latest", api_key=gemini_api_key)
 
 
