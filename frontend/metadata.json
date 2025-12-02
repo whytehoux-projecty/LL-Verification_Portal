@@ -1,0 +1,8 @@
+{
+  "name": "LexNova Legal",
+  "description": "A legal interview interface connecting lawyers, clients, and an AI Officiant for marriage verification sessions.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

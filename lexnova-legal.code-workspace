@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../Project Built/Z/Voice Agent Projects/elevenlabs-examples-main"
+		},
+		{
+			"path": "../Project Built/Z/Voice Agent Projects/elevenlabs-python-main"
+		},
+		{
+			"path": "../Project Built/Z/Voice Agent Projects/elevenlabs-ui-main"
+		},
+		{
+			"path": "../Project Built/Z/Voice Agent Projects/livekit-master"
+		}
+	],
+	"settings": {}
+}
